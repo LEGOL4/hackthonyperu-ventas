@@ -3,10 +3,11 @@ import Clientes from './components/Clientes';
 import Login from './components/Login';
 import Productos from './components/Productos';
 import Categorias from './components/Categorias';
+import Pedidos from './components/Pedidos';
 import { getToken, getUsuario, logout } from './services/authService';
 import type { Usuario } from './services/authService';
 
-type Vista = 'clientes' | 'productos' | 'categorias';
+type Vista = 'clientes' | 'productos' | 'categorias' | 'pedidos';
 
 function App() {
   const [autenticado, setAutenticado] = useState<boolean>(!!getToken());
@@ -38,30 +39,22 @@ function App() {
             <span className="text-blue-300 text-sm ml-2">Sistema de Ventas</span>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => setVista('clientes')}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${
-                vista === 'clientes' ? 'bg-white text-blue-900' : 'hover:bg-blue-800'
-              }`}
-            >
-              Clientes
-            </button>
-            <button
-              onClick={() => setVista('categorias')}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${
-                vista === 'categorias' ? 'bg-white text-blue-900' : 'hover:bg-blue-800'
-              }`}
-            >
-              Categorías
-            </button>
-            <button
-              onClick={() => setVista('productos')}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${
-                vista === 'productos' ? 'bg-white text-blue-900' : 'hover:bg-blue-800'
-              }`}
-            >
-              Productos
-            </button>
+            {([
+              { key: 'clientes', label: 'Clientes' },
+              { key: 'categorias', label: 'Categorías' },
+              { key: 'productos', label: 'Productos' },
+              { key: 'pedidos', label: 'Pedidos' },
+            ] as { key: Vista; label: string }[]).map(({ key, label }) => (
+              <button
+                key={key}
+                onClick={() => setVista(key)}
+                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${
+                  vista === key ? 'bg-white text-blue-900' : 'hover:bg-blue-800'
+                }`}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -83,6 +76,7 @@ function App() {
       {vista === 'clientes' && <Clientes />}
       {vista === 'categorias' && <Categorias />}
       {vista === 'productos' && <Productos />}
+      {vista === 'pedidos' && <Pedidos />}
     </div>
   );
 }
