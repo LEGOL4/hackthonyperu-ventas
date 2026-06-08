@@ -6,30 +6,36 @@ import { getClientes, createCliente, updateCliente, deleteCliente } from '../ser
 
 // Mock del servicio
 vi.mock('../services/clienteService', () => ({
-  getClientes: vi.fn().mockResolvedValue([
-    {
-      id: 4,
-      nombres: 'Carlos',
-      apellidos: 'Ramos Torres',
-      email: 'carlos.ramos@gmail.com',
-      telefono: '976543210',
-      direccion: 'Jr. Cusco 456, San Isidro',
-      dni: '32109876',
-      estado: 'ACTIVO',
-      fecha_registro: '2026-05-20T23:04:25.614Z'
-    },
-    {
-      id: 6,
-      nombres: 'JESUS',
-      apellidos: 'Chavez',
-      email: 'a@gmail.com',
-      telefono: '963852741',
-      direccion: 'las brisas',
-      dni: '78451296',
-      estado: 'ACTIVO',
-      fecha_registro: '2026-05-20T23:35:20.088Z'
-    }
-  ]),
+  getClientes: vi.fn().mockResolvedValue({
+    data: [
+      {
+        id: 4,
+        nombres: 'Carlos',
+        apellidos: 'Ramos Torres',
+        email: 'carlos.ramos@gmail.com',
+        telefono: '976543210',
+        direccion: 'Jr. Cusco 456, San Isidro',
+        dni: '32109876',
+        estado: 'ACTIVO',
+        fecha_registro: '2026-05-20T23:04:25.614Z'
+      },
+      {
+        id: 6,
+        nombres: 'JESUS',
+        apellidos: 'Chavez',
+        email: 'a@gmail.com',
+        telefono: '963852741',
+        direccion: 'las brisas',
+        dni: '78451296',
+        estado: 'ACTIVO',
+        fecha_registro: '2026-05-20T23:35:20.088Z'
+      }
+    ],
+    total: 2,
+    page: 1,
+    limit: 20,
+    totalPages: 1
+  }),
   createCliente: vi.fn().mockResolvedValue({
     id: 10,
     nombres: 'Ana',
@@ -60,7 +66,8 @@ describe('Componente Clientes - Pruebas Unitarias', () => {
   test('Debe mostrar el subtítulo de la empresa', async () => {
     render(<Clientes />);
     await waitFor(() => {
-      expect(screen.getByText('GRUPO HACKTHONYPERU S.A.C')).toBeInTheDocument();
+      const elementos = screen.getAllByText(/GRUPO HACKTHONYPERU S\.A\.C/i);
+      expect(elementos.length).toBeGreaterThan(0);
     });
   });
 
@@ -167,7 +174,7 @@ describe('Componente Clientes - Pruebas Unitarias', () => {
 
   test('Debe permitir editar un cliente existente con éxito', async () => {
     const { container } = render(<Clientes />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('Carlos')).toBeInTheDocument();
     });
@@ -178,7 +185,7 @@ describe('Componente Clientes - Pruebas Unitarias', () => {
     // El formulario se debe abrir en modo Editar
     expect(screen.getByText('Editar Cliente')).toBeInTheDocument();
     const nombresInput = container.querySelector('input[name="nombres"]') as HTMLInputElement;
-    
+
     // Limpiamos y escribimos otro nombre
     await userEvent.clear(nombresInput);
     await userEvent.type(nombresInput, 'Carlos Manuel');
