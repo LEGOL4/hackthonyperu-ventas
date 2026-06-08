@@ -46,6 +46,9 @@ describe('API Clientes - Pruebas Unitarias con Mocking de BD', () => {
         { id: 4, nombres: 'Carlos', apellidos: 'Ramos', email: 'carlos@gmail.com', estado: 'ACTIVO' },
         { id: 6, nombres: 'JESUS', apellidos: 'Chavez', email: 'jesus@gmail.com', estado: 'ACTIVO' }
       ];
+      // Primera query: COUNT
+      pool.query.mockResolvedValueOnce({ rows: [{ count: '2' }] });
+      // Segunda query: SELECT con paginación
       pool.query.mockResolvedValueOnce({ rows: mockClientes });
 
       const res = await request(app)
@@ -53,12 +56,11 @@ describe('API Clientes - Pruebas Unitarias con Mocking de BD', () => {
         .set('Authorization', `Bearer ${tokenValido}`);
 
       expect(res.statusCode).toBe(200);
-      expect(Array.isArray(res.body)).toBe(true);
-      expect(res.body.length).toBe(2);
-      expect(res.body[0].nombres).toBe('Carlos');
-      expect(pool.query).toHaveBeenCalledWith(
-        'SELECT * FROM clientes ORDER BY fecha_registro DESC'
-      );
+      expect(res.body).toHaveProperty('data');
+      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body.data.length).toBe(2);
+      expect(res.body.data[0].nombres).toBe('Carlos');
+      expect(res.body).toHaveProperty('total', 2);
     });
 
     test('Debe retornar 500 si la base de datos falla', async () => {
@@ -114,7 +116,7 @@ describe('API Clientes - Pruebas Unitarias con Mocking de BD', () => {
         direccion: 'Av. Test 123',
         dni: '77889900'
       };
-      
+
       pool.query.mockResolvedValueOnce({
         rows: [{ id: 10, ...nuevoCliente, estado: 'ACTIVO' }]
       });
