@@ -1,9 +1,6 @@
-const API_URL = 'http://localhost:3000/api/pedidos';
+import { API_BASE_URL, getAuthHeaders } from '../config/api';
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('token')}`
-});
+const API_URL = `${API_BASE_URL}/pedidos`;
 
 export interface DetallePedido {
   producto_id: number;
@@ -40,20 +37,20 @@ export interface PedidosPaginados {
 
 export const getPedidos = async (page = 1, limit = 20): Promise<PedidosPaginados> => {
   const res = await fetch(`${API_URL}?page=${page}&limit=${limit}`, {
-    headers: getHeaders()
+    headers: getAuthHeaders()
   });
   return res.json();
 };
 
 export const getPedidoById = async (id: number): Promise<Pedido> => {
-  const res = await fetch(`${API_URL}/${id}`, { headers: getHeaders() });
+  const res = await fetch(`${API_URL}/${id}`, { headers: getAuthHeaders() });
   return res.json();
 };
 
 export const createPedido = async (pedido: Pedido): Promise<Pedido> => {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify(pedido),
   });
   if (!res.ok) {
@@ -66,7 +63,7 @@ export const createPedido = async (pedido: Pedido): Promise<Pedido> => {
 export const updateEstadoPedido = async (id: number, estado: string): Promise<Pedido> => {
   const res = await fetch(`${API_URL}/${id}/estado`, {
     method: 'PUT',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify({ estado }),
   });
   if (!res.ok) {

@@ -136,8 +136,6 @@ const updateEstadoPedido = async (req, res) => {
     const { id } = req.params;
     const { estado } = req.body;
 
-    console.log('Actualizando pedido:', id, 'estado:', estado);
-
     const estadosValidos = ['PENDIENTE', 'EN_PROCESO', 'ENTREGADO', 'CANCELADO'];
     if (!estadosValidos.includes(estado)) {
       return res.status(400).json({ mensaje: 'Estado no válido' });

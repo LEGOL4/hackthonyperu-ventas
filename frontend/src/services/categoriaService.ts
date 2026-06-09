@@ -1,9 +1,6 @@
-const API_URL = 'http://localhost:3000/api/categorias';
+import { API_BASE_URL, getAuthHeaders } from '../config/api';
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('token')}`
-});
+const API_URL = `${API_BASE_URL}/categorias`;
 
 export interface Categoria {
   id?: number;
@@ -13,14 +10,14 @@ export interface Categoria {
 }
 
 export const getCategorias = async (): Promise<Categoria[]> => {
-  const res = await fetch(API_URL, { headers: getHeaders() });
+  const res = await fetch(API_URL, { headers: getAuthHeaders() });
   return res.json();
 };
 
 export const createCategoria = async (categoria: Categoria): Promise<Categoria> => {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify(categoria),
   });
   return res.json();
@@ -29,7 +26,7 @@ export const createCategoria = async (categoria: Categoria): Promise<Categoria> 
 export const updateCategoria = async (id: number, categoria: Categoria): Promise<Categoria> => {
   const res = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify(categoria),
   });
   return res.json();
@@ -38,6 +35,6 @@ export const updateCategoria = async (id: number, categoria: Categoria): Promise
 export const deleteCategoria = async (id: number): Promise<void> => {
   await fetch(`${API_URL}/${id}`, {
     method: 'DELETE',
-    headers: getHeaders()
+    headers: getAuthHeaders()
   });
 };

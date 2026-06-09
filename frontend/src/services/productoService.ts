@@ -1,9 +1,6 @@
-const API_URL = 'http://localhost:3000/api/productos';
+import { API_BASE_URL, getAuthHeaders } from '../config/api';
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('token')}`
-});
+const API_URL = `${API_BASE_URL}/productos`;
 
 export interface Producto {
   id?: number;
@@ -29,7 +26,7 @@ export interface ProductosPaginados {
 
 export const getProductos = async (page = 1, limit = 20): Promise<ProductosPaginados> => {
   const res = await fetch(`${API_URL}?page=${page}&limit=${limit}`, {
-    headers: getHeaders()
+    headers: getAuthHeaders()
   });
   return res.json();
 };
@@ -37,7 +34,7 @@ export const getProductos = async (page = 1, limit = 20): Promise<ProductosPagin
 export const createProducto = async (producto: Producto): Promise<Producto> => {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify(producto),
   });
   return res.json();
@@ -46,7 +43,7 @@ export const createProducto = async (producto: Producto): Promise<Producto> => {
 export const updateProducto = async (id: number, producto: Producto): Promise<Producto> => {
   const res = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify(producto),
   });
   return res.json();
@@ -55,6 +52,6 @@ export const updateProducto = async (id: number, producto: Producto): Promise<Pr
 export const deleteProducto = async (id: number): Promise<void> => {
   await fetch(`${API_URL}/${id}`, {
     method: 'DELETE',
-    headers: getHeaders()
+    headers: getAuthHeaders()
   });
 };

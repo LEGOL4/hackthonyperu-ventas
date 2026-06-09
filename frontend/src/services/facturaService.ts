@@ -1,9 +1,6 @@
-const API_URL = 'http://localhost:3000/api/facturas';
+import { API_BASE_URL, getAuthHeaders } from '../config/api';
 
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${localStorage.getItem('token')}`
-});
+const API_URL = `${API_BASE_URL}/facturas`;
 
 export interface Factura {
   id?: number;
@@ -47,20 +44,20 @@ export interface Reporte {
 
 export const getFacturas = async (page = 1, limit = 20): Promise<FacturasPaginadas> => {
   const res = await fetch(`${API_URL}?page=${page}&limit=${limit}`, {
-    headers: getHeaders()
+    headers: getAuthHeaders()
   });
   return res.json();
 };
 
 export const getFacturaById = async (id: number): Promise<Factura> => {
-  const res = await fetch(`${API_URL}/${id}`, { headers: getHeaders() });
+  const res = await fetch(`${API_URL}/${id}`, { headers: getAuthHeaders() });
   return res.json();
 };
 
 export const createFactura = async (pedido_id: number): Promise<Factura> => {
   const res = await fetch(API_URL, {
     method: 'POST',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
     body: JSON.stringify({ pedido_id }),
   });
   if (!res.ok) {
@@ -73,7 +70,7 @@ export const createFactura = async (pedido_id: number): Promise<Factura> => {
 export const anularFactura = async (id: number): Promise<Factura> => {
   const res = await fetch(`${API_URL}/${id}/anular`, {
     method: 'PUT',
-    headers: getHeaders(),
+    headers: getAuthHeaders(),
   });
   if (!res.ok) {
     const error = await res.json();
@@ -83,6 +80,6 @@ export const anularFactura = async (id: number): Promise<Factura> => {
 };
 
 export const getReportes = async (): Promise<Reporte> => {
-  const res = await fetch(`${API_URL}/reportes`, { headers: getHeaders() });
+  const res = await fetch(`${API_URL}/reportes`, { headers: getAuthHeaders() });
   return res.json();
 };
