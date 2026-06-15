@@ -193,7 +193,7 @@ export default function Clientes() {
         </div>
 
         {mensaje && (
-          <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">
+          <div role="alert" aria-live="assertive" className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">
             {mensaje}
           </div>
         )}
