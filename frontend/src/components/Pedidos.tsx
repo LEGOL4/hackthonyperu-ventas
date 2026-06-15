@@ -145,8 +145,8 @@ export default function Pedidos() {
           </button>
         </div>
 
-        {mensaje && <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
-        {error && <div className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
+        {mensaje && <div role="alert" aria-live="assertive" className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
+        {error && <div role="alert" aria-live="assertive" className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
 
         {/* Modal detalle */}
         {pedidoDetalle && (
@@ -300,6 +300,7 @@ export default function Pedidos() {
                     <td className="px-4 py-3">
                       <select value={p.estado}
                         onChange={e => handleCambiarEstado(p.id!, e.target.value)}
+                        aria-label={`Cambiar estado del pedido ${p.numero_pedido}`}
                         className={`px-2 py-1 rounded-full text-xs font-semibold border-0 cursor-pointer ${colorEstado[p.estado || 'PENDIENTE']}`}>
                         {ESTADOS.map(e => <option key={e} value={e}>{e}</option>)}
                       </select>
@@ -307,6 +308,7 @@ export default function Pedidos() {
                     <td className="px-4 py-3 text-xs">{new Date(p.fecha_pedido!).toLocaleDateString()}</td>
                     <td className="px-4 py-3">
                       <button onClick={() => handleVerDetalle(p.id!)}
+                        aria-label={`Ver detalle pedido ${p.numero_pedido}`}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition">
                         Ver Detalle
                       </button>
