@@ -246,12 +246,14 @@ export default function Clientes() {
                     <td className="px-4 py-3 flex gap-2">
                       <button
                         onClick={() => handleEditar(c)}
+                        aria-label={`Editar cliente ${c.nombres} ${c.apellidos}`}
                         className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-xs font-semibold transition"
                       >
                         Editar
                       </button>
                       <button
                         onClick={() => handleEliminar(c.id!)}
+                        aria-label={`Eliminar cliente ${c.nombres} ${c.apellidos}`}
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition"
                       >
                         Eliminar
