@@ -1,11 +1,12 @@
 const pool = require('../config/db');
 const bcrypt = require('bcryptjs');
 const { generarToken } = require('../config/jwt');
+const crypto = require('crypto');
+const { enviarEmailRecuperacion } = require('../config/email');
 
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     if (!email || !password) {
       return res.status(400).json({ mensaje: 'Email y contraseña son requeridos' });
     }
@@ -76,7 +77,6 @@ const login = async (req, res) => {
         rol: usuario.rol
       }
     });
-
   } catch (error) {
     console.error('Error en login:', error.message);
     res.status(500).json({ mensaje: 'Error en el servidor', error: error.message });
@@ -110,4 +110,78 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { login, logout, getMe };
+const solicitarRecuperacion = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ mensaje: 'El email es requerido' });
+    }
+
+    const result = await pool.query(
+      'SELECT * FROM usuarios WHERE email = $1', [email]
+    );
+
+    // Siempre responder igual para no revelar si el email existe
+    if (result.rows.length === 0) {
+      return res.json({ mensaje: 'Si el email existe recibirás un correo en breve' });
+    }
+
+    const usuario = result.rows[0];
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiracion = new Date();
+    expiracion.setMinutes(expiracion.getMinutes() + 30);
+
+    await pool.query(
+      `UPDATE usuarios SET token_recuperacion = $1, token_expiracion = $2 WHERE id = $3`,
+      [token, expiracion, usuario.id]
+    );
+
+    await enviarEmailRecuperacion(email, token);
+
+    res.json({ mensaje: 'Si el email existe recibirás un correo en breve' });
+  } catch (error) {
+    console.error('Error en recuperación:', error.message);
+    res.status(500).json({ mensaje: 'Error al procesar la solicitud', error: error.message });
+  }
+};
+
+const restablecerPassword = async (req, res) => {
+  try {
+    const { token, nuevaPassword } = req.body;
+
+    if (!token || !nuevaPassword) {
+      return res.status(400).json({ mensaje: 'Token y nueva contraseña son requeridos' });
+    }
+
+    if (nuevaPassword.length < 8) {
+      return res.status(400).json({ mensaje: 'La contraseña debe tener mínimo 8 caracteres' });
+    }
+
+    const result = await pool.query(
+      `SELECT * FROM usuarios 
+       WHERE token_recuperacion = $1 
+       AND token_expiracion > NOW()`,
+      [token]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(400).json({ mensaje: 'Token inválido o expirado' });
+    }
+
+    const usuario = result.rows[0];
+    const hash = await bcrypt.hash(nuevaPassword, 10);
+
+    await pool.query(
+      `UPDATE usuarios 
+       SET password_hash = $1, token_recuperacion = NULL, token_expiracion = NULL 
+       WHERE id = $2`,
+      [hash, usuario.id]
+    );
+
+    res.json({ mensaje: 'Contraseña restablecida correctamente' });
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al restablecer contraseña', error: error.message });
+  }
+};
+
+module.exports = { login, logout, getMe, solicitarRecuperacion, restablecerPassword };

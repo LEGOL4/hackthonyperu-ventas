@@ -3,9 +3,10 @@ import { login, guardarSesion } from '../services/authService';
 
 interface Props {
   onLoginExitoso: () => void;
+  onRecuperar: () => void;
 }
 
-export default function Login({ onLoginExitoso }: Props) {
+export default function Login({ onLoginExitoso, onRecuperar }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,7 +30,6 @@ export default function Login({ onLoginExitoso }: Props) {
   return (
     <div className="min-h-screen bg-blue-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
-
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-800">HACKTHONYPERU</h1>
           <p className="text-gray-500 text-sm mt-1">Sistema de Ventas S.A.C</p>
@@ -54,7 +54,7 @@ export default function Login({ onLoginExitoso }: Props) {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               required
               placeholder="correo@ejemplo.com"
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -68,11 +68,21 @@ export default function Login({ onLoginExitoso }: Props) {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               required
               placeholder="••••••••"
               className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
+          </div>
+
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={onRecuperar}
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium transition"
+            >
+              ¿Olvidaste tu contraseña?
+            </button>
           </div>
 
           <button

@@ -5,14 +5,18 @@ const {
   getProductoById,
   createProducto,
   updateProducto,
-  deleteProducto
+  deleteProducto,
+  getAlertasStock,
 } = require('../controllers/productos.controller');
 const { verificarAuth } = require('../middlewares/auth.middleware');
 
-router.get('/', verificarAuth, getProductos);
-router.get('/:id', verificarAuth, getProductoById);
-router.post('/', verificarAuth, createProducto);
-router.put('/:id', verificarAuth, updateProducto);
+// ⚠️ /alertas-stock ANTES de /:id para que Express no lo interprete como un id
+router.get('/alertas-stock', verificarAuth, getAlertasStock);
+
+router.get('/',     verificarAuth, getProductos);
+router.get('/:id',  verificarAuth, getProductoById);
+router.post('/',    verificarAuth, createProducto);
+router.put('/:id',  verificarAuth, updateProducto);
 router.delete('/:id', verificarAuth, deleteProducto);
 
 module.exports = router;

@@ -99,11 +99,26 @@ const deleteProducto = async (req, res) => {
     res.status(500).json({ mensaje: 'Error al eliminar producto', error });
   }
 };
-
+const getAlertasStock = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT p.id, p.nombre, p.stock, p.stock_minimo, c.nombre AS categoria_nombre
+       FROM productos p
+       LEFT JOIN categorias c ON p.categoria_id = c.id
+       WHERE p.stock <= p.stock_minimo
+         AND p.estado = 'ACTIVO'
+       ORDER BY (p.stock_minimo - p.stock) DESC`
+    );
+    res.json({ data: result.rows, total: result.rows.length });
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener alertas de stock', error });
+  }
+};
 module.exports = {
   getProductos,
   getProductoById,
   createProducto,
   updateProducto,
-  deleteProducto
+  deleteProducto,
+  getAlertasStock,
 };
