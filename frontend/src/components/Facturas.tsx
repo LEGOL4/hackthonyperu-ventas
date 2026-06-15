@@ -312,8 +312,8 @@ const generarTicket = (factura: Factura) => {
           </button>
         </div>
 
-        {mensaje && <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
-        {error && <div className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
+        {mensaje && <div role="alert" aria-live="assertive" className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
+        {error && <div role="alert" aria-live="assertive" className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
 
         {/* Modal detalle factura */}
         {facturaDetalle && (
@@ -329,17 +329,20 @@ const generarTicket = (factura: Factura) => {
                 <div className="flex gap-2">
                         <button
                             onClick={() => generarPDF(facturaDetalle)}
+                            aria-label={`Descargar PDF de factura ${facturaDetalle.numero_serie}`}
                             className="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-4 py-1.5 rounded-lg transition"
                         >
                             📄 PDF
                         </button>
                         <button
                             onClick={() => generarTicket(facturaDetalle)}
+                            aria-label={`Descargar ticket de factura ${facturaDetalle.numero_serie}`}
                             className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-1.5 rounded-lg transition"
                         >
                             🧾 Ticket
                         </button>
                         <button onClick={() => setFacturaDetalle(null)}
+                            aria-label="Cerrar detalle de factura"
                             className="text-gray-400 hover:text-gray-600 text-2xl font-bold">✕
                         </button>
                     </div>
@@ -450,11 +453,13 @@ const generarTicket = (factura: Factura) => {
                     <td className="px-4 py-3 text-xs">{new Date(f.fecha_emision!).toLocaleDateString()}</td>
                     <td className="px-4 py-3 flex gap-2">
                       <button onClick={() => handleVerDetalle(f.id!)}
+                        aria-label={`Ver detalle factura ${f.numero_serie}`}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-semibold transition">
                         Ver
                       </button>
                       {f.estado !== 'ANULADA' && (
                         <button onClick={() => handleAnular(f.id!)}
+                          aria-label={`Anular factura ${f.numero_serie}`}
                           className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition">
                           Anular
                         </button>
