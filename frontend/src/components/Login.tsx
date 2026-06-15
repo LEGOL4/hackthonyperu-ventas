@@ -48,10 +48,11 @@ export default function Login({ onLoginExitoso, onRecuperar }: Props) {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+            <label htmlFor="login-email" className="block text-sm font-medium text-gray-600 mb-1">
               Correo electrónico
             </label>
             <input
+              id="login-email"
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -62,10 +63,11 @@ export default function Login({ onLoginExitoso, onRecuperar }: Props) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
+            <label htmlFor="login-password" className="block text-sm font-medium text-gray-600 mb-1">
               Contraseña
             </label>
             <input
+              id="login-password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
