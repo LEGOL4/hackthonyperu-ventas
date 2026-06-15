@@ -1,24 +1,22 @@
 const { Pool } = require('pg');
 
-// DEBUG: Ver qué variables están cargadas
-console.log('=== DEBUG DATABASE CONNECTION ===');
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
-if (process.env.DATABASE_URL) {
-  console.log('DATABASE_URL starts with:', process.env.DATABASE_URL.substring(0, 30) + '...');
-}
-console.log('DB_USER (old):', process.env.DB_USER || 'NOT SET');
-console.log('DB_HOST (old):', process.env.DB_HOST || 'NOT SET');
-console.log('=================================');
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
+const pool = new Pool(
+  process.env.DATABASE_URL
+    ? {
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+      }
+    : {
+        host:     process.env.DB_HOST,
+        port:     process.env.DB_PORT,
+        user:     process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME,
+      }
+);
 
 pool.connect()
-  .then(() => console.log('✅ Conexión a PostgreSQL exitosa'))
-  .catch((err) => console.error('❌ Error de conexión:', err.message));
+  .then(() => console.log('Conexion a PostgreSQL exitosa'))
+  .catch((err) => console.error('Error de conexion:', err.message));
 
 module.exports = pool;
