@@ -79,8 +79,8 @@ export default function Categorias() {
           </button>
         </div>
 
-        {mensaje && <div className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
-        {error && <div className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
+        {mensaje && <div role="alert" aria-live="assertive" className="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded mb-4">{mensaje}</div>}
+        {error && <div role="alert" aria-live="assertive" className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-4">{error}</div>}
 
         {mostrarForm && (
           <div className="bg-white rounded-xl shadow p-6 mb-6">
@@ -139,10 +139,12 @@ export default function Categorias() {
                     </td>
                     <td className="px-4 py-3 flex gap-2">
                       <button onClick={() => handleEditar(c)}
+                        aria-label={`Editar categoría ${c.nombre}`}
                         className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded text-xs font-semibold transition">
                         Editar
                       </button>
                       <button onClick={() => handleEliminar(c.id!)}
+                        aria-label={`Eliminar categoría ${c.nombre}`}
                         className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold transition">
                         Eliminar
                       </button>
