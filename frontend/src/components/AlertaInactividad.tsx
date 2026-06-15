@@ -10,7 +10,13 @@ export default function AlertaInactividad({
   onCerrarSesion,
 }: AlertaInactividadProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="alerta-titulo"
+      onKeyDown={(e) => e.key === 'Escape' && onCerrarSesion()}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    >
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 text-center">
         {/* Ícono de advertencia */}
         <div className="flex justify-center mb-4">
@@ -31,7 +37,7 @@ export default function AlertaInactividad({
           </div>
         </div>
 
-        <h2 className="text-xl font-bold text-gray-800 mb-2">
+        <h2 id="alerta-titulo" className="text-xl font-bold text-gray-800 mb-2">
           ¿Sigues ahí?
         </h2>
         <p className="text-gray-500 mb-1">
