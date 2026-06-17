@@ -1,0 +1,16 @@
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+coverage/
+.git
+.vscode/
+.idea/
+.DS_Store
+.env.local
+.env.*.local
+.dockerignore
+Dockerfile
